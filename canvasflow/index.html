@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#111318">
+  <title>CanvasFlow v2.1.0 — Visual Website Studio</title>
+  <meta name="description" content="Build expressive, responsive websites visually and export the real HTML, CSS, and assets you own.">
+  <meta name="color-scheme" content="dark">
+  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./styles/editor-experience.css">
+</head>
+<body>
+  <div id="app" class="app-shell">
+    <header class="topbar">
+      <a class="brand-block" href="#" aria-label="CanvasFlow home">
+        <div class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></div>
+        <div class="brand-copy"><strong>CanvasFlow</strong><span>VISUAL WEBSITE STUDIO <i>·</i> 2.1.0</span></div>
+      </a>
+      <div class="project-title-wrap">
+        <span class="project-label">PROJECT</span>
+        <label class="visually-hidden" for="projectName">Project name</label>
+        <input id="projectName" class="project-name" value="Northstar — Creative Studio" maxlength="80" aria-label="Project name">
+        <span class="save-indicator"><i id="saveDot" class="save-dot"></i><span id="saveStatus" role="status">Not saved yet</span></span>
+      </div>
+      <div class="top-actions" aria-label="Project actions">
+        <div class="history-actions" role="group" aria-label="Edit history">
+          <button id="undoBtn" class="icon-action" title="Undo (Ctrl/Cmd+Z)" aria-label="Undo" disabled>↶</button>
+          <button id="redoBtn" class="icon-action" title="Redo (Ctrl/Cmd+Shift+Z)" aria-label="Redo" disabled>↷</button>
+        </div>
+        <span class="action-divider" aria-hidden="true"></span>
+        <details class="action-menu">
+          <summary><span class="action-menu-symbol" aria-hidden="true">✦</span><span>Design tools</span><span class="menu-chevron" aria-hidden="true">⌄</span></summary>
+          <div class="action-menu-popover" aria-label="Design tools">
+            <button id="designSystemBtn" type="button" class="menu-action"><span class="menu-action-icon palette-icon" aria-hidden="true">◉</span><span><strong>Design system</strong><small>Colour, type &amp; spacing</small></span></button>
+            <button id="assetLibraryBtn" type="button" class="menu-action"><span class="menu-action-icon asset-icon" aria-hidden="true">▧</span><span><strong>Asset library</strong><small>Images and reusable graphics</small></span></button>
+            <button id="componentsBtn" type="button" class="menu-action"><span class="menu-action-icon component-icon" aria-hidden="true">◈</span><span><strong>Components</strong><small>Reusable, linked elements</small></span></button>
+          </div>
+        </details>
+        <details class="action-menu">
+          <summary><span class="action-menu-symbol project-menu-symbol" aria-hidden="true">▤</span><span>Project</span><span class="menu-chevron" aria-hidden="true">⌄</span></summary>
+          <div class="action-menu-popover" aria-label="Project actions">
+            <button id="newProjectBtn" type="button" class="menu-action"><span class="menu-action-icon" aria-hidden="true">＋</span><span><strong>New project</strong><small>Start blank or from a starter</small></span></button>
+            <button id="openBtn" type="button" class="menu-action"><span class="menu-action-icon" aria-hidden="true">↗</span><span><strong>Open saved project</strong><small>Continue where you left off</small></span></button>
+            <span class="menu-action-divider" aria-hidden="true"></span>
+            <button id="backupBtn" type="button" class="menu-action"><span class="menu-action-icon" aria-hidden="true">↓</span><span><strong>Download backup</strong><small>Keep an editable copy</small></span></button>
+            <button id="importBackupBtn" type="button" class="menu-action"><span class="menu-action-icon" aria-hidden="true">↑</span><span><strong>Import backup</strong><small>Restore a CanvasFlow project</small></span></button>
+          </div>
+        </details>
+        <button id="saveBtn" class="button button-secondary save-top-action" title="Save now (Ctrl/Cmd+S)"><span aria-hidden="true">↓</span> Save</button>
+        <button id="exportBtn" class="button button-primary export-top-action" title="Export standalone website ZIP (Ctrl/Cmd+Shift+E)"><span aria-hidden="true">⇧</span> Export website</button>
+        <button id="productGuideBtn" class="button button-guide" type="button" title="Explore CanvasFlow features and workflows" aria-controls="productGuideDialog" aria-haspopup="dialog"><span aria-hidden="true">?</span> Guide</button>
+      </div>
+    </header>
+
+    <div class="workspace">
+      <aside id="structurePanel" class="panel left-panel" aria-label="Website structure and elements">
+        <div class="sidebar-title-row"><div><span class="eyebrow">WORKSPACE</span><h2>Structure</h2><p class="panel-subtitle">Pages, sections &amp; layers</p></div><span id="pageCountLabel" class="sidebar-count">1 page</span><button type="button" id="closeStructurePanelBtn" class="panel-close-button" aria-label="Close structure panel">×</button></div>
+        <button type="button" id="pageSettingsBtn" class="page-card" aria-label="Open current page settings">
+          <span class="page-icon" aria-hidden="true">▤</span>
+          <span class="page-card-copy"><strong id="pageCardName">Home page</strong><small id="pageCardPath">index.html · page settings</small></span>
+          <span class="page-live">PAGE</span>
+        </button>
+        <section class="page-manager" aria-label="Website pages">
+          <div class="page-manager-heading"><span class="eyebrow">SITE PAGES</span><button id="addPageBtn" type="button" class="mini-add-button" title="Add a page" aria-label="Add page">＋</button></div>
+          <div id="pageList" class="page-list"></div>
+          <div class="page-manager-actions"><button type="button" id="duplicatePageBtn">Duplicate</button><button type="button" id="deletePageBtn" disabled>Delete</button></div>
+          <button type="button" id="siteChromeBtn" class="site-chrome-button"><span aria-hidden="true">⌘</span><span><strong>Shared site chrome</strong><small>Navigation · footer</small></span><span class="site-chrome-arrow">↗</span></button>
+        </section>
+
+        <div class="section-heading-row"><span class="eyebrow">PAGE SECTIONS</span><span id="sectionCount" class="tiny-count">03</span></div>
+        <label class="visually-hidden" for="sectionTemplate">Section template</label>
+        <div class="add-section-row">
+          <select id="sectionTemplate" class="select-input section-template" aria-label="Section template">
+            <option value="content">Content section</option>
+            <option value="navigation">Navigation bar</option>
+            <option value="hero">Hero section</option>
+            <option value="features">Feature grid</option>
+            <option value="cta">Call to action</option>
+            <option value="footer">Site footer</option>
+          </select>
+          <button id="addSectionBtn" class="icon-button add-icon" aria-label="Add section" title="Add section">+</button>
+        </div>
+        <div class="layers-heading-row"><div><span class="eyebrow">LAYER EXPLORER</span><small>Organise and select elements</small></div><span id="layerFilterStatus" class="layer-filter-status">All layers</span></div>
+        <label class="layer-search"><span aria-hidden="true">⌕</span><input id="layerSearchInput" type="search" placeholder="Find a layer…" autocomplete="off" aria-label="Search layers"><kbd>/</kbd></label>
+        <div id="layersList" class="layers-list" aria-label="Select a section or element"></div>
+        <div class="left-panel-bottom">
+          <div class="local-first-icon" aria-hidden="true">◇</div>
+          <strong>Designed to stay yours.</strong>
+          <p>Your editable project stays in this browser. Your exported website is a separate, portable set of files.</p>
+        </div>
+      </aside>
+
+      <main class="editor-main">
+        <div class="editor-toolbar">
+          <div class="workspace-quick-actions" role="group" aria-label="Workspace panels">
+            <button type="button" id="structurePanelBtn" class="workspace-panel-button" aria-controls="structurePanel" aria-expanded="false"><span aria-hidden="true">☷</span><span>Structure</span></button>
+            <button type="button" id="addInsertBtn" class="workspace-panel-button workspace-add-button" aria-controls="insertDialog" aria-haspopup="dialog"><span aria-hidden="true">＋</span><span>Add</span></button>
+            <button type="button" id="inspectorPanelBtn" class="workspace-panel-button" aria-controls="propertiesPanel" aria-expanded="false"><span aria-hidden="true">☰</span><span>Properties</span></button>
+          </div>
+          <div class="breadcrumb"><span class="breadcrumb-muted">My projects</span><span aria-hidden="true">/</span><strong id="pageBreadcrumb">Home page</strong></div>
+          <div class="viewport-tools" role="group" aria-label="Preview device size">
+            <button id="desktopBtn" class="viewport-button active" aria-pressed="true" title="Desktop preview"><span aria-hidden="true">▣</span> Desktop</button>
+            <button id="tabletBtn" class="viewport-button" aria-pressed="false" title="Tablet preview"><span aria-hidden="true">▤</span> Tablet</button>
+            <button id="mobileBtn" class="viewport-button" aria-pressed="false" title="Mobile preview"><span aria-hidden="true">▯</span> Mobile</button>
+          </div>
+          <span class="preview-chip" role="status" aria-live="polite"><i></i><span id="previewStatusText">Live preview</span></span>
+        </div>
+        <dialog id="insertDialog" class="insert-dialog" aria-labelledby="insertDialogTitle">
+          <div class="insert-dialog-panel">
+            <header class="insert-dialog-header">
+              <div><span class="eyebrow">BUILD · ADD TO PAGE</span><h2 id="insertDialogTitle">Choose a building block</h2><p>Search or browse by task. New elements are inserted into the selected section or container.</p></div>
+              <button type="button" class="dialog-close" data-close-insert aria-label="Close Add panel">×</button>
+            </header>
+            <label class="insert-search"><span aria-hidden="true">⌕</span><input id="insertSearchInput" type="search" placeholder="Search content, layout, media or drawing tools…" autocomplete="off" aria-label="Search building blocks"></label>
+            <p id="insertSearchEmpty" class="insert-search-empty" hidden>No building blocks match that search. Try a shorter term.</p>
+        <div class="insert-toolbar" role="toolbar" aria-label="Add website element">
+          <div class="insert-tool-group" aria-label="Content elements">
+            <span class="tool-group-label">Content</span>
+            <div class="insert-tool-items">
+              <button type="button" class="insert-button" data-insert="heading" title="Add a heading"><span class="insert-glyph">T</span> Heading</button>
+              <button type="button" class="insert-button" data-insert="paragraph" title="Add body text"><span class="insert-glyph">¶</span> Text</button>
+              <button type="button" class="insert-button" data-insert="button" title="Add an interactive button"><span class="insert-glyph">↗</span> Button</button>
+            </div>
+          </div>
+          <div class="insert-tool-group" aria-label="Media and layout elements">
+            <span class="tool-group-label">Media &amp; layout</span>
+            <div class="insert-tool-items">
+              <button type="button" class="insert-button" data-insert="image" title="Add an image"><span class="insert-glyph">▧</span> Image</button>
+              <button type="button" class="insert-button" data-insert="card" title="Add a content card"><span class="insert-glyph">▦</span> Card</button>
+              <button type="button" class="insert-button" data-insert="container" title="Add a nested Flexbox / Grid container"><span class="insert-glyph">▤</span> Container</button>
+            </div>
+          </div>
+          <div class="insert-tool-group" aria-label="Graphic elements">
+            <span class="tool-group-label">Graphics</span>
+            <div class="insert-tool-items">
+              <button type="button" class="insert-button" data-insert="shape" title="Add a shape"><span class="insert-glyph">◇</span> Shape</button>
+              <button type="button" class="insert-button insert-overlay-button" data-insert="overlay-shape" title="Add a decorative shape positioned independently inside this section"><span class="insert-glyph">✣</span> Overlay</button>
+              <button type="button" class="insert-button" data-insert="divider" title="Add a divider"><span class="insert-glyph">―</span> Divider</button>
+            </div>
+          </div>
+          <div class="insert-tool-group insert-vector-group" aria-label="Vector drawing tools">
+            <span class="tool-group-label">Vector tools</span>
+            <div class="insert-tool-items">
+              <button type="button" class="insert-button vector-tool-button active" data-vector-tool="select" aria-pressed="true" title="Select existing elements"><span class="insert-glyph">↖</span> Select</button>
+              <button type="button" class="insert-button vector-tool-button" data-vector-tool="freehand" aria-pressed="false" title="Draw a freehand path"><span class="insert-glyph">✎</span> Freehand</button>
+              <button type="button" class="insert-button vector-tool-button" data-vector-tool="bezier" aria-pressed="false" title="Click to add anchors; Enter to finish"><span class="insert-glyph">⌁</span> Pen</button>
+              <button type="button" class="insert-button vector-tool-button" data-vector-tool="rect" aria-pressed="false" title="Drag to draw a vector rectangle"><span class="insert-glyph">□</span> Rect</button>
+              <button type="button" class="insert-button vector-tool-button" data-vector-tool="ellipse" aria-pressed="false" title="Drag to draw a vector ellipse"><span class="insert-glyph">◯</span> Ellipse</button>
+            </div>
+          </div>
+        </div>
+          </div>
+        </dialog>
+        <section class="canvas-area" aria-label="Website preview">
+          <div class="canvas-topline">
+            <span class="canvas-page-label"><i class="canvas-dot"></i> HOME / PAGE 01 <b aria-hidden="true">·</b> <span id="viewportLabel">DESKTOP VIEW · FLUID WIDTH</span></span>
+            <div class="canvas-controls" role="group" aria-label="Canvas controls">
+              <div class="canvas-control-cluster width-cluster" aria-label="Preview width">
+                <label class="custom-width-control"><span>Viewport</span><input id="customWidthInput" type="number" min="320" max="1920" step="10" value="1280" aria-label="Custom preview width in pixels"><span>px</span></label>
+                <button id="applyCustomWidthBtn" type="button" class="canvas-tool-button" title="Apply custom viewport width">Apply</button>
+              </div>
+              <div class="canvas-control-cluster zoom-cluster" role="group" aria-label="Canvas zoom">
+                <button id="zoomOutBtn" type="button" class="canvas-tool-button zoom-step" aria-label="Zoom out" title="Zoom out">−</button>
+                <input id="zoomPercentInput" class="zoom-percent-input" type="number" min="25" max="200" step="1" value="100" aria-label="Canvas zoom percentage">
+                <button id="zoomInBtn" type="button" class="canvas-tool-button zoom-step" aria-label="Zoom in" title="Zoom in">+</button>
+                <button id="fitCanvasBtn" type="button" class="canvas-tool-button fit-canvas-button" aria-pressed="false" title="Fit the preview to the available canvas">Fit</button>
+              </div>
+              <details class="canvas-more-menu"><summary class="canvas-tool-button" aria-label="More canvas tools">Tools <span aria-hidden="true">⌄</span></summary>
+                <div class="canvas-more-popover" aria-label="Additional canvas tools">
+                  <span class="canvas-menu-kicker">CANVAS TOOLS</span>
+                  <button id="handToolBtn" type="button" class="canvas-tool-button" aria-pressed="false" title="Hand tool: drag to pan the canvas">Hand tool <kbd>Space</kbd></button>
+                  <button id="centerSelectionBtn" type="button" class="canvas-tool-button" title="Centre the selected element(s) in the canvas">Centre selection</button>
+                  <div class="canvas-menu-divider"></div>
+                  <button id="guidesBtn" type="button" class="canvas-tool-button" aria-pressed="false" title="Show content alignment and spacing guides">Guides</button>
+                  <button id="gridBtn" type="button" class="canvas-tool-button" aria-pressed="false" title="Show a non-exported 16 px design grid">Grid</button>
+                  <button id="rulersBtn" type="button" class="canvas-tool-button" aria-pressed="false" title="Show pixel rulers; drag from a ruler to add a guide">Rulers</button>
+                </div>
+              </details>
+              <details class="shortcuts-help"><summary title="Show keyboard shortcuts">⌘ Shortcuts</summary><div class="shortcuts-panel"><strong>CanvasFlow shortcuts</strong><p><kbd>Ctrl/Cmd</kbd> + <kbd>S</kbd> Save · <kbd>Ctrl/Cmd</kbd> + <kbd>Z</kbd> Undo</p><p><kbd>Ctrl/Cmd</kbd> + <kbd>Shift</kbd> + <kbd>E</kbd> Export · <kbd>Ctrl/Cmd</kbd> + <kbd>Shift</kbd> + <kbd>F</kbd> Fit canvas</p><p><kbd>Alt</kbd> + <kbd>↑</kbd>/<kbd>↓</kbd> Raise/lower layer</p><p><kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>D</kbd> Duplicate</p><p><kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>H</kbd> Toggle visibility</p><p><kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>K</kbd> Toggle canvas lock</p><p><kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>L/C/R/S</kbd> Align left/centre/right/stretch</p><p><kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>G</kbd> Cycle equal-gap presets (select all siblings)</p><small>Focus a layer or select elements first. Avoid typing in a Properties field while using shortcuts.</small></div></details>
+            </div>
+          </div>
+          <div id="previewStage" class="preview-stage desktop-stage">
+            <div id="frameWrap" class="frame-wrap"><iframe id="sitePreview" title="Live website preview" sandbox="allow-scripts" loading="eager"></iframe><div id="emptyCanvasState" class="canvas-empty-state" hidden><span class="canvas-empty-mark" aria-hidden="true">＋</span><h3>Your canvas is ready</h3><p>Add your first building block, or set the page background to begin from a blank design.</p><div><button type="button" id="emptyCanvasAddBtn" class="button button-primary">Add an element</button><button type="button" id="emptyCanvasPageSettingsBtn" class="button button-secondary">Page background</button></div></div><div id="rulerTop" class="canvas-ruler canvas-ruler-x" aria-hidden="true" hidden></div><div id="rulerLeft" class="canvas-ruler canvas-ruler-y" aria-hidden="true" hidden></div></div>
+          </div>
+        <div class="canvas-bottomline"><span><span class="tiny-violet-dot"></span> Select · drag Free-position elements · drag rulers to add guides · Space + drag to pan</span><span id="canvasWidthLabel">Fluid desktop preview</span></div>
+        </section>
+        <footer class="editor-footer"><span><span class="status-check" aria-hidden="true">✓</span> Real HTML · responsive CSS · editable project model</span><span>CANVASFLOW 2.1.0 · VISUAL WEBSITE STUDIO</span></footer>
+      </main>
+
+      <aside id="propertiesPanel" class="panel inspector-panel" aria-label="Element properties">
+        <div class="inspector-title-row"><div><span class="eyebrow">DESIGN</span><h2>Properties</h2><p class="panel-subtitle">Fine-tune the selected layer</p></div><span class="inspector-sliders" aria-hidden="true">☷</span><button type="button" id="closeInspectorPanelBtn" class="panel-close-button" aria-label="Close properties panel">×</button></div>
+        <div id="inspectorContent" class="inspector-content"></div>
+        <div class="inspector-footer"><span class="inspector-check" aria-hidden="true">✓</span><span>Styles export to real CSS. Use Alt+Shift shortcuts for duplicate, visibility, lock and alignment. Overlay arrows nudge; Shift = larger, Alt = fine.</span></div>
+      </aside>
+    </div>
+    <div id="workspaceBackdrop" class="workspace-backdrop" aria-hidden="true"></div>
+    <nav class="mobile-workspace-nav" aria-label="Workspace panels">
+      <button type="button" id="mobileStructureBtn" aria-controls="structurePanel" aria-expanded="false"><span aria-hidden="true">☷</span><span>Structure</span></button>
+      <button type="button" id="mobileAddBtn" aria-controls="insertDialog" aria-haspopup="dialog"><span aria-hidden="true">＋</span><span>Add</span></button>
+      <button type="button" id="mobilePropertiesBtn" aria-controls="propertiesPanel" aria-expanded="false"><span aria-hidden="true">☰</span><span>Properties</span></button>
+    </nav>
+    <dialog id="designSystemDialog" class="design-system-dialog" aria-labelledby="designSystemTitle">
+      <div class="design-system-modal">
+        <div class="new-project-heading">
+          <div><span class="eyebrow">PROJECT-WIDE STYLES</span><h2 id="designSystemTitle">Design system</h2><p>One source of truth for shared colours, typography, corners and layout rhythm.</p></div>
+          <button type="button" class="dialog-close" data-close-design-system aria-label="Close design system">×</button>
+        </div>
+        <div class="design-preset-row" role="group" aria-label="Design system presets">
+          <button type="button" data-design-preset="studio"><span class="preset-dots studio-dots"></span>Studio</button>
+          <button type="button" data-design-preset="ocean"><span class="preset-dots ocean-dots"></span>Ocean</button>
+          <button type="button" data-design-preset="forest"><span class="preset-dots forest-dots"></span>Forest</button>
+          <button type="button" data-design-preset="ember"><span class="preset-dots ember-dots"></span>Ember</button>
+          <button type="button" data-design-preset="mono"><span class="preset-dots mono-dots"></span>Mono</button>
+          <button type="button" data-design-preset="editorial"><span class="preset-dots editorial-dots"></span>Editorial</button>
+        </div>
+        <div class="design-system-scroll">
+          <section class="token-section"><div class="token-section-title"><strong>Colour tokens</strong><small>Shared palette roles</small></div>
+            <div class="token-grid">
+              <label>Primary <input type="color" name="color-primary"></label><label>Text <input type="color" name="color-text"></label>
+              <label>Muted text <input type="color" name="color-muted"></label><label>Surface <input type="color" name="color-surface"></label>
+              <label>Border <input type="color" name="color-border"></label><label>Page <input type="color" name="color-page"></label>
+            </div>
+          </section>
+          <section class="token-section"><div class="token-section-title"><strong>Typography</strong><small>Heading and body styles</small></div>
+            <div class="token-grid two">
+              <label>Font pairing <select name="type-pairing"><option value="modern">Modern · sans / sans</option><option value="editorial">Editorial · serif / humanist</option><option value="friendly">Friendly · rounded / humanist</option><option value="technical">Technical · sans / mono</option><option value="classic">Classic · serif / serif</option><option value="custom">Custom pairing</option></select></label>
+              <label>Type scale <select name="type-scalePreset"><option value="compact">Compact</option><option value="balanced">Balanced</option><option value="expressive">Expressive</option><option value="custom">Custom scale</option></select></label>
+              <label>Heading font <select name="type-headingFont"><option value="system">Modern sans-serif</option><option value="serif">Editorial serif</option><option value="rounded">Rounded sans-serif</option><option value="humanist">Humanist sans-serif</option><option value="mono">Monospace</option></select></label>
+              <label>Body font <select name="type-bodyFont"><option value="system">Modern sans-serif</option><option value="serif">Editorial serif</option><option value="rounded">Rounded sans-serif</option><option value="humanist">Humanist sans-serif</option><option value="mono">Monospace</option></select></label>
+              <label>Base body size <input type="number" name="type-baseSize" min="12" max="22" step="1"></label>
+              <label>Scale ratio <input type="number" name="type-ratio" min="1.1" max="1.333" step="0.01"></label>
+              <label>Heading weight <select name="type-headingWeight"><option>400</option><option>500</option><option>600</option><option>650</option><option>700</option><option>750</option><option>800</option></select></label>
+              <label>Body weight <select name="type-bodyWeight"><option>400</option><option>500</option><option>600</option><option>650</option><option>700</option><option>750</option><option>800</option></select></label>
+            </div>
+            <div id="typeScalePreview" class="type-scale-preview" aria-label="Typography scale preview"><span>LIVE TYPE PREVIEW</span><h3 data-type-preview="h1">A clear headline</h3><h4 data-type-preview="h2">A supporting heading</h4><p data-type-preview="body">Body copy previews your selected font pairing and scale before you save. Responsive scale tokens adapt to tablet and mobile screens.</p></div>
+            <p class="field-help">The scale generates linked H1, H2, H3, body and button sizes for new elements. Switch the canvas to Tablet or Mobile to override text sizes per element.</p>
+          </section>
+          <section class="token-section"><div class="token-section-title"><strong>Shape and spacing</strong><small>Measured in pixels</small></div>
+            <div class="token-grid three">
+              <label>Small radius <input type="number" name="radius-small" min="0" max="32"></label><label>Medium radius <input type="number" name="radius-medium" min="0" max="40"></label><label>Large radius <input type="number" name="radius-large" min="0" max="48"></label>
+              <label>Section padding <input type="number" name="spacing-section" min="32" max="180"></label><label>Element gap <input type="number" name="spacing-gap" min="8" max="64"></label>
+              <label>Content width <input type="number" name="width-content" min="320" max="1200"></label><label>Wide width <input type="number" name="width-wide" min="320" max="1200"></label>
+            </div>
+          </section>
+        </div>
+        <div class="design-system-footer"><p>Tokens export as CSS variables. Existing custom styles are preserved; new components inherit these values.</p><div><button type="button" class="button button-quiet" data-close-design-system>Cancel</button><button type="button" id="saveDesignSystemBtn" class="button button-primary">Save design system</button></div></div>
+      </div>
+    </dialog>
+    <dialog id="siteChromeDialog" class="site-chrome-dialog" aria-labelledby="siteChromeTitle">
+      <div class="site-chrome-modal">
+        <div class="new-project-heading">
+          <div><span class="eyebrow">SHARED ACROSS ALL PAGES</span><h2 id="siteChromeTitle">Site navigation & footer</h2><p>Change these once and every exported page receives the same shared header and footer.</p></div>
+          <button type="button" class="dialog-close" data-close-site-chrome aria-label="Close dialog">×</button>
+        </div>
+        <section class="site-chrome-setting"><label class="toggle-row"><span><strong>Show global navigation</strong><small>Automatically lists every page in the project.</small></span><input id="siteNavEnabled" type="checkbox"></label><label class="field"><span class="field-label">Brand / site name</span><input id="siteBrandName" type="text" maxlength="80"></label></section>
+        <section class="site-chrome-setting"><label class="toggle-row"><span><strong>Show global footer</strong><small>Includes the shared footer text and page links.</small></span><input id="siteFooterEnabled" type="checkbox"></label><label class="field"><span class="field-label">Footer text</span><input id="siteFooterText" type="text" maxlength="240"></label></section>
+        <p class="field-help">Navigation links are generated from your page names and URL slugs. Add, rename, reorder or delete pages in the Site pages list; the shared links update automatically.</p>
+        <div class="site-chrome-footer"><button type="button" class="button button-quiet" data-close-site-chrome>Cancel</button><button type="button" id="saveSiteChromeBtn" class="button button-primary">Save shared site chrome</button></div>
+      </div>
+    </dialog>
+    <dialog id="componentsDialog" class="components-dialog" aria-labelledby="componentsTitle">
+      <div class="components-modal">
+        <div class="new-project-heading">
+          <div><span class="eyebrow">REUSABLE DESIGN SYSTEM</span><h2 id="componentsTitle">Component studio</h2><p>Create a component from a selected element, edit its shared master, and reuse linked instances across your pages.</p></div>
+          <button type="button" class="dialog-close" data-close-components aria-label="Close component studio">×</button>
+        </div>
+        <div id="componentLibraryContent" class="component-library-content" aria-live="polite"></div>
+        <div class="components-modal-footer"><span>Up to 50 components · 8 variants each</span><button type="button" class="button button-primary" data-close-components>Done</button></div>
+      </div>
+    </dialog>
+    <dialog id="assetLibraryDialog" class="asset-library-dialog" aria-labelledby="assetLibraryTitle">
+      <div class="asset-library-modal">
+        <div class="new-project-heading">
+          <div><span class="eyebrow">PROJECT ASSETS</span><h2 id="assetLibraryTitle">Asset library</h2><p>Upload once, reuse across pages, and export only the assets your website actually uses.</p></div>
+          <button type="button" class="dialog-close" data-close-assets aria-label="Close asset library">×</button>
+        </div>
+        <div class="asset-library-toolbar"><label class="asset-search"><span class="visually-hidden">Search assets</span><input id="assetSearchInput" type="search" placeholder="Search by filename or format…" autocomplete="off"></label><button type="button" id="uploadAssetsBtn" class="button button-primary">＋ Upload assets</button></div>
+        <div class="asset-library-limits"><span>PNG · JPG · WebP · GIF · SVG</span><span>1 MB raster · 350 KB SVG · 1.5 MB total</span></div>
+        <div id="assetLibraryContent" class="asset-library-grid" aria-live="polite"></div>
+        <div class="asset-library-footer"><span id="assetLibrarySummary">0 assets</span><button type="button" class="button button-quiet" data-close-assets>Done</button></div>
+      </div>
+    </dialog>
+    <dialog id="newProjectDialog" class="new-project-dialog" aria-labelledby="newProjectTitle">
+      <div class="new-project-modal">
+        <div class="new-project-heading">
+          <div><span class="eyebrow">NEW PROJECT</span><h2 id="newProjectTitle">Start with a canvas</h2><p>Choose a starting point. You can change everything later.</p></div>
+          <button type="button" class="dialog-close" data-close-new-project aria-label="Close dialog">×</button>
+        </div>
+        <div class="new-project-choices">
+          <button type="button" class="project-choice" data-new-project="blank">
+            <span class="project-choice-preview blank-preview"><i></i></span>
+            <strong>Blank page</strong>
+            <small>A clean white canvas. Set your own background colour and build from scratch.</small>
+            <span class="choice-cta">Start blank <b>→</b></span>
+          </button>
+          <button type="button" class="project-choice" data-new-project="starter">
+            <span class="project-choice-preview starter-preview"><i></i><i></i><i></i></span>
+            <strong>Starter website</strong>
+            <small>Begin with a ready-made multi-section website and customise the content.</small>
+            <span class="choice-cta">Use starter <b>→</b></span>
+          </button>
+        </div>
+        <p class="new-project-warning">Creating a new project replaces the current browser-saved project. Download a Backup first if you want to keep it.</p>
+        <div class="new-project-footer"><button type="button" class="button button-quiet" data-close-new-project>Cancel</button></div>
+      </div>
+    </dialog>
+    <dialog id="productGuideDialog" class="product-guide-dialog" aria-labelledby="productGuideTitle">
+      <div class="product-guide-modal">
+        <header class="product-guide-hero">
+          <div class="guide-hero-copy">
+            <span class="guide-kicker"><i aria-hidden="true"></i> THE CANVASFLOW WORKFLOW</span>
+            <h2 id="productGuideTitle">From first idea to a website you own.</h2>
+            <p>Build the structure, shape the visual system, refine every screen, then export real code. You stay in control at every step.</p>
+          </div>
+          <button type="button" class="dialog-close" data-close-guide aria-label="Close CanvasFlow guide">×</button>
+          <div class="guide-hero-art" aria-hidden="true"><div class="guide-art-window"><div class="guide-art-bar"><i></i><i></i><i></i></div><div class="guide-art-layout"><span class="guide-art-side"></span><div class="guide-art-page"><b></b><i></i><i></i><span><em></em><em></em><em></em></span></div><span class="guide-art-inspector"></span></div></div><span class="guide-art-orbit orbit-one"></span><span class="guide-art-orbit orbit-two"></span></div>
+        </header>
+        <section class="guide-workflow" aria-label="A simple workflow">
+          <div class="guide-section-heading"><div><span class="eyebrow">A CLEAR CREATIVE FLOW</span><h3>Four steps. One connected workspace.</h3></div><span class="guide-section-note">Start anywhere, come back anytime.</span></div>
+          <div class="guide-step-grid">
+            <article class="guide-step-card step-structure"><span class="guide-step-number">01</span><span class="guide-step-icon" aria-hidden="true">▤</span><h4>Structure</h4><p>Organise pages, sections and nested containers.</p><button type="button" data-guide-action="new-project">Start a project <b>↗</b></button></article>
+            <article class="guide-step-card step-design"><span class="guide-step-number">02</span><span class="guide-step-icon" aria-hidden="true">✳</span><h4>Design</h4><p>Set your colours, typography, imagery and components.</p><button type="button" data-guide-action="design-system">Shape the system <b>↗</b></button></article>
+            <article class="guide-step-card step-refine"><span class="guide-step-number">03</span><span class="guide-step-icon" aria-hidden="true">⌗</span><h4>Refine</h4><p>Check breakpoints, align precisely and tune interactions.</p><button type="button" data-guide-action="tablet">Preview a screen <b>↗</b></button></article>
+            <article class="guide-step-card step-publish"><span class="guide-step-number">04</span><span class="guide-step-icon" aria-hidden="true">⇧</span><h4>Export</h4><p>Download portable HTML, CSS, JavaScript and assets.</p><button type="button" data-guide-action="export">Export your site <b>↗</b></button></article>
+          </div>
+        </section>
+        <section class="guide-feature-section" aria-label="Explore CanvasFlow features">
+          <div class="guide-section-heading"><div><span class="eyebrow">EXPLORE THE TOOLKIT</span><h3>Powerful tools, exactly where you need them.</h3></div></div>
+          <div class="guide-feature-grid">
+            <button type="button" class="guide-feature-card" data-guide-action="assets"><span class="guide-feature-icon feature-assets" aria-hidden="true">▧</span><span><strong>Asset library</strong><small>Bring in images and keep reusable artwork organised.</small></span><b>↗</b></button>
+            <button type="button" class="guide-feature-card" data-guide-action="components"><span class="guide-feature-icon feature-components" aria-hidden="true">◈</span><span><strong>Reusable components</strong><small>Change a shared component once, update every instance.</small></span><b>↗</b></button>
+            <button type="button" class="guide-feature-card" data-guide-action="precision"><span class="guide-feature-icon feature-precision" aria-hidden="true">⌖</span><span><strong>Precision canvas</strong><small>Use guides, rulers, grid and smart alignment.</small></span><b>↗</b></button>
+            <button type="button" class="guide-feature-card" data-guide-action="shortcuts"><span class="guide-feature-icon feature-shortcuts" aria-hidden="true">⌘</span><span><strong>Keyboard shortcuts</strong><small>Move faster with familiar editing commands.</small></span><b>↗</b></button>
+          </div>
+        </section>
+        <footer class="guide-trust-row"><span class="guide-trust-mark" aria-hidden="true">◇</span><span><strong>Your work stays yours.</strong><small>Projects are saved in this browser. Exported websites are yours to host, edit and share.</small></span><button type="button" class="button button-primary" data-close-guide>Back to the editor</button></footer>
+      </div>
+    </dialog>
+    <input id="importInput" type="file" accept=".canvasflow.json,application/json,.json" hidden>
+  <input id="imageInput" type="file" accept="image/png,image/jpeg,image/webp,image/gif,image/svg+xml,.svg" hidden>
+    <input id="assetUploadInput" type="file" accept="image/png,image/jpeg,image/webp,image/gif,image/svg+xml,.svg" multiple hidden>
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  </div>
+  <script type="module" src="./src/app.js"></script>
+</body>
+</html>

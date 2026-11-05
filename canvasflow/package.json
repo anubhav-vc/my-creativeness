@@ -1,0 +1,14 @@
+{
+  "name": "canvasflow-visual-studio",
+  "version": "2.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "start": "node server.mjs",
+    "check": "node --check server.mjs && node --check src/model.js && node --check src/geometry.js && node --check src/history.js && node --check src/zip.js && node --check src/project-storage.js && node --check src/app.js",
+    "test": "node --test"
+  }
+}
